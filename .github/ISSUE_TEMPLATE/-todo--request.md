@@ -14,7 +14,8 @@ assignees: ''
 
 # 추가할 기능
 <기한>
--[] todo @할 사람
--[] todo @할 사람
--[] todo @할 사람
--[] todo
+
+- [ ] todo @할 사람
+- [ ] todo @할 사람
+- [ ] todo @할 사람
+- [ ] todo
