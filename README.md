@@ -5,7 +5,7 @@
 - git remote add origin "https://github.com/SiNiKin/MiniPrj_2024.git"
 - git pull origin main
 
-깃 작업 하기 전에 브런치 꼭 만드릭
+깃 작업 하기 전에 브런치 꼭 만들기 !
 
 - git checkout -b branch명
 - git add .
