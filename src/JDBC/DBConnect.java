@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DBConnect {
 
-	private String url = "jdbc:mysql://localhost:3306/testdb?serverTimezone=Asia/Seoul";
+	private String url = "jdbc:mysql://localhost:3306/mpj?serverTimezone=Asia/Seoul";
 	private String user = "root";
 	private String password = "root1234";
 	
@@ -62,22 +62,23 @@ public class DBConnect {
 		return result;
 	}
 	
-	// 2. 정보 출력 메서드
-	// 전체 테이블 정보 출력
+	// 2. 랭킹 출력 메서드
+	
 	public List<PlayVO> allPlay() {
 		List<PlayVO> list = new ArrayList();
 		
-		String sql = "select * from Play";
+		String sql = "select id, name, score, rank() over (order by score asc) as ranking from play";
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
 				int id = rs.getInt("id");
-				String Name = rs.getString("name");
+				String name = rs.getString("name");
 				int score = rs.getInt("score");
 				
-				PlayVO vo = new PlayVO(Name, score);
+				PlayVO vo = new PlayVO(name, score);
 				list.add(vo);
+				
 			}
 		} catch (SQLException e) {
 			System.out.println("SQL연동 실패");
