@@ -98,8 +98,7 @@ public class DBConnect {
 	public int updatePlay(PlayVO vo) {
 		int result = 0;
 		
-		String sql = "update Play set score = '"+vo.getScore()
-						+"' where name = " + vo.getId();
+		String sql = "update Play set score = '"+vo.getScore() + "' where name = '" + vo.getName() + "'";
 		
 		try {
 			stmt = conn.createStatement();
