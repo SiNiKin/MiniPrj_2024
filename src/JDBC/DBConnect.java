@@ -43,7 +43,7 @@ public class DBConnect {
 		int result = 0;
 		
 		String sql = "insert into Play (name, score) "
-				+ "values('"+vo.getName()+"' ,"
+				+ "values('"+vo.getName()+"' , '"
 				+vo.getScore()+"')";
 		
 		try {
