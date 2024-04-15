@@ -99,7 +99,7 @@ public class Event {
 				System.out.println("3Strike 입니다!! " + save + "번 만에 맞추셨습니다.");
 				break;
 			} else {
-				System.out.println(strikes + "S" + balls + "B " + outs + "O");
+				System.out.println(strikes + "S " + balls + "B " + outs + "O");
 			}
 		}
 
