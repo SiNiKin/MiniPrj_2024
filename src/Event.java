@@ -6,10 +6,6 @@ import JDBC.DBConnect;
 import JDBC.PlayVO;
 
 public class Event {
-	public static void main(String[] args) {
-		gameStart();
-	}
-
 	public static void gameStart() {
 		DBConnect dao = new DBConnect();
 		PlayVO vo = new PlayVO();
