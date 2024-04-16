@@ -2,6 +2,7 @@ package JDBC;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,9 +16,9 @@ public class DBConnect {
 	private String user = "root";
 	private String password = "root1234";
 	
-	// 데이터 접속을 위한 객체 
+	// 데이터 접속을 위한 객체  
 	Connection conn = null;
-	Statement stmt = null;
+	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	
 	// 생성자 - Connection 객체를 생성... 
@@ -39,80 +40,107 @@ public class DBConnect {
 	
 	//CRUD 메서드 
 	// 1. 데이터 입력 메서드
-	public int insert(PlayVO vo) {
-		int result = 0;
-		
-		String sql = "insert into Play (name, score) "
-				+ "values('"+vo.getName()+"' , '"
-				+vo.getScore()+"')";
+	public void insert(String name, int score) {
+		String sql = "insert into Play (name, score) values(?,?)";
 		
 		try {
 			//Statement 객체 생성
-			stmt = conn.createStatement();
-			result = stmt.executeUpdate(sql);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.setInt(2, score);
+			
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("SQL 연동 에러");
 			System.out.println(e.getMessage());
 		} finally {
 			try {
-				if(stmt != null) stmt.close();
+				if(pstmt != null) pstmt.close();
 			} catch (Exception e2) {}
 		}
 		
-		return result;
 	}
 	
-	// 2. 랭킹 출력 메서드
-	
-	public List<PlayVO> allPlay() {
-		List<PlayVO> list = new ArrayList();
+	// 2. 데이터 조회 메서드
+	public ArrayList<PlayVO> playerList() {
+		ArrayList<PlayVO> list = new ArrayList<>();
+		String sql = "select * from play";
 		
-		String sql = "select id, name, score, rank() over (order by score asc) as ranking from play";
 		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sql);
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery(sql);
 			while(rs.next()) {
 				int id = rs.getInt("id");
 				String name = rs.getString("name");
 				int score = rs.getInt("score");
 				
-				PlayVO vo = new PlayVO(name, score);
-				list.add(vo);
+				PlayVO vo = new PlayVO(id, name, score, 0);
 				
+				list.add(vo);
 			}
 		} catch (SQLException e) {
 			System.out.println("SQL연동 실패");
 			System.out.println(e.getMessage());
 		} finally {
 			try {
-				if(stmt != null) stmt.close();
+				if(pstmt != null) pstmt.close();
 				if(rs != null) rs.close();
 			} catch (Exception e2) {}
 		}
 		
-		
 		return list;
 	}
 	
-	// 3. 정보 수정 메서드 
-	public int updatePlay(PlayVO vo) {
-		int result = 0;
-		
-		String sql = "update Play set score = '"+vo.getScore() + "' where name = '" + vo.getName() + "'";
-		
+	// 3. 랭킹 출력 메서드
+	public PlayVO allPlay() {
+		PlayVO vo = null;
+		String sql = "select id, name, score, rank() over (order by score asc) as ranking from play";
 		try {
-			stmt = conn.createStatement();
-			result = stmt.executeUpdate(sql);
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery(sql);
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				int score = rs.getInt("score");
+				int rank = rs.getInt("ranking");
+				
+				vo = new PlayVO(id, name, score, rank);
+				System.out.println(vo);
+			}
 		} catch (SQLException e) {
 			System.out.println("SQL연동 실패");
 			System.out.println(e.getMessage());
 		} finally {
 			try {
-				if(stmt != null) stmt.close();
+				if(pstmt != null) pstmt.close();
+				if(rs != null) rs.close();
 			} catch (Exception e2) {}
 		}
 		
-		return result;
+		
+		return vo;
+	}
+	
+	// 4. 정보 수정 메서드 
+	public void updatePlay(int score, String name) {
+		int result = 0;
+		
+		String sql = "update Play set score =? where name =?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, score);
+			pstmt.setString(2, name);
+			
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL연동 실패");
+			System.out.println(e.getMessage());
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+			} catch (Exception e2) {}
+		}
 	}
 	
 
