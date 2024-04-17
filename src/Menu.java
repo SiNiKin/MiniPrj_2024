@@ -27,6 +27,7 @@ public class Menu {
          		System.out.println("랭킹을 불러오겠습니다.");
          		DBConnect dao = new DBConnect();
          		dao.allPlay();
+         		break;
          	case 'ㄷ':
          	case 'e':
          		System.out.println("게임이 끝났습니다.");
@@ -39,3 +40,4 @@ public class Menu {
          
       }
    }
+}
