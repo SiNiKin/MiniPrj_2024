@@ -1,46 +1,41 @@
 import java.util.Scanner;
-
 import JDBC.DBConnect;
 
 public class Menu {
    
-   static Scanner scan = new Scanner(System.in);
+   static Scanner sc = new Scanner(System.in);
    
    public static void main(String[] args) {
-      
+
+	  
       while(true) {
          // 고객 메뉴 ui
          System.out.println("[[ PITCHER GAME ]]");
-         System.out.println("게임을 시작하려면 S을, 재시작하려면 R, 끝내려면 E를 입력하세요.");
+         System.out.println("-- 게임 시작 : S, 랭킹 : R, 게임 종료 : E --");
          System.out.print(">>");
-         String menu = scan.next();
+         String menu = sc.next();
          menu =  menu.toLowerCase();
          
-         EXIT: switch(menu.charAt(0)) {
-         case 'ㄴ':
-         case 's':
-         case 'ㄱ':
-         case 'r':
-            System.out.println("게임을 시작합니다.");
-            Event e = new Event();
-            e.gameStart();
-            System.out.print(">>");
-            String reMenu = scan.next();
-            switch(reMenu.charAt(0)) {
-               case 'ㄷ': 
-               case 'e':
-                  break EXIT;
-               default:
-                  break;
-            }  
-         case 'ㄷ':
-         case 'e':
-            System.out.println("게임이 끝났습니다.");
-            DBConnect dao = new DBConnect();
-            dao.allPlay();
-            
-         }
+         switch(menu.charAt(0)) {
+         	case 'ㄴ':
+         	case 's':
+         		System.out.println("게임을 시작합니다.");
+         		Event e = new Event(sc);
+         		break;
+         	case 'ㄱ':
+         	case 'r':
+         		System.out.println("랭킹을 불러오겠습니다.");
+         		DBConnect dao = new DBConnect();
+         		dao.allPlay();
+         	case 'ㄷ':
+         	case 'e':
+         		System.out.println("게임이 끝났습니다.");
+         		sc.close();
+         		System.exit(0);
+         	default:
+         		System.out.println("잘못된 값을 입력하셨습니다. 다시 입력해주세요.");
+         		break;
+         } 
          
       }
    }
-}
