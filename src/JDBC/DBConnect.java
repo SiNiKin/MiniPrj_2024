@@ -5,9 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class DBConnect {
@@ -123,7 +121,6 @@ public class DBConnect {
 	
 	// 4. 정보 수정 메서드 
 	public void updatePlay(int score, String name) {
-		int result = 0;
 		
 		String sql = "update Play set score =? where name =?";
 		
