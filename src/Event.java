@@ -15,6 +15,10 @@ public class Event {
       this.dao= new DBConnect();
       this.vo = new PlayVO();
       
+      startGame();
+   }
+   
+   public void startGame(){
       System.out.print("사용자 이름을 입력하세요: ");
       String playerName = scan.next();
       scan.nextLine();
@@ -23,7 +27,7 @@ public class Event {
       boolean playerData = checkPlayer(playerList, playerName);
       List<Integer> comList = randomList();
       int save = playGame(comList);
-      gameResult(dao, playerData, playerName, save);
+      gameResult(playerData, playerName, save);
 
    }
 
@@ -104,11 +108,11 @@ public class Event {
    }
 
    // 기존 플레이어일 경우 점수 업데이트
-   public void gameResult(DBConnect dao, boolean playerData, String playerName, int save) {
+   public void gameResult(boolean playerData, String playerName, int save) {
       if (playerData) {
-         dao.updatePlay(save, playerName);;
+         dao.updatePlay(save, playerName);
       } else {
-         dao.insert(playerName, save);;
+         dao.insert(playerName, save);
       }
    }
 }
