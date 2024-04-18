@@ -6,8 +6,8 @@ public class Menu {
    static Scanner sc = new Scanner(System.in);
    
    public static void main(String[] args) {
-
-	  
+	DBConnect dao = new DBConnect();
+	Event e = new Event(sc);
       while(true) {
          // 고객 메뉴 ui
          System.out.println("[[ PITCHER GAME ]]");
@@ -20,12 +20,11 @@ public class Menu {
          	case 'ㄴ':
          	case 's':
          		System.out.println("게임을 시작합니다.");
-         		Event e = new Event(sc);
+			e.startGame();
          		break;
          	case 'ㄱ':
          	case 'r':
          		System.out.println("랭킹을 불러오겠습니다.");
-         		DBConnect dao = new DBConnect();
          		dao.allPlay();
          		break;
          	case 'ㄷ':
