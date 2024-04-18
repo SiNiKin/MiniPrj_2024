@@ -9,13 +9,12 @@ public class Event {
    Scanner scan;
    DBConnect dao ;
    PlayVO vo ;
+   int result;
    
    public Event(Scanner sc) {
       this.scan = sc;
       this.dao= new DBConnect();
       this.vo = new PlayVO();
-      
-      startGame();
    }
    
    public void startGame(){
@@ -23,27 +22,14 @@ public class Event {
       String playerName = scan.next();
       scan.nextLine();
 
-      List<PlayVO> playerList = dao.playerList();
-      boolean playerData = checkPlayer(playerList, playerName);
       List<Integer> comList = randomList();
       int save = playGame(comList);
-      gameResult(playerData, playerName, save);
+      gameResult(playerName, save);
 
-   }
-
-   // 사용자 이름으로 데이터 조회
-   public boolean checkPlayer(List<PlayVO> playerList, String playerName) {
-      for (PlayVO player : playerList) {
-         if (player.getName().equals(playerName)) {
-            System.out.println("기존 플레이어입니다.");
-            return true;
-         }
-      }
-      return false;
    }
 
    // 랜덤한 3자리 수 생성
-   public List<Integer> randomList() {
+   private List<Integer> randomList() {
       List<Integer> comList = new ArrayList<>();
       while (comList.size() < 3) {
          int num = (int) (Math.random() * 9) + 1;
@@ -55,7 +41,7 @@ public class Event {
    }
 
    // 사용자한테 3자리수 입력값 받기
-   public int playGame(List<Integer> comList) {
+   private int playGame(List<Integer> comList) {
       int save = 0;
       
       while (true) {
@@ -108,8 +94,8 @@ public class Event {
    }
 
    // 기존 플레이어일 경우 점수 업데이트
-   public void gameResult(boolean playerData, String playerName, int save) {
-      if (playerData) {
+   public void gameResult(String playerName, int save) {
+      if (result == 1) {
          dao.updatePlay(save, playerName);
       } else {
          dao.insert(playerName, save);
