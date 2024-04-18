@@ -22,6 +22,7 @@ public class Event {
       String playerName = scan.next();
       scan.nextLine();
 
+      result = dao.nameConfirm(playerName);
       List<Integer> comList = randomList();
       int save = playGame(comList);
       gameResult(playerName, save);
@@ -94,9 +95,10 @@ public class Event {
    }
 
    // 기존 플레이어일 경우 점수 업데이트
-   public void gameResult(String playerName, int save) {
+   private void gameResult(String playerName, int save) {
       if (result == 1) {
          dao.updatePlay(save, playerName);
+         System.out.println("점수가 업데이트 되었습니다.");
       } else {
          dao.insert(playerName, save);
       }
