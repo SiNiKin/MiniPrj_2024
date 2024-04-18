@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import JDBC.JdbcUtil;
+
 
 public class DBConnect {
 
@@ -37,34 +39,58 @@ public class DBConnect {
 	}
 	
 	//CRUD 메서드 
-	// 1. 데이터 입력 메서드
+	
+	// 1. 테이블 만드는 메서드
+	public void createTable() {
+		String sql = "create table if not exists play (\n"
+				+ "	id INT(50) NOT NULL auto_increment,\n"
+				+ "    name varchar(100) NOT NULL,\n"
+				+ "    score int NOT NULL,\n"
+				+ "    constraint play_pk primary key(id)\n"
+				+ ")";
+		
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("SQL연동 실패");
+		} finally {
+			JdbcUtil.close(conn, pstmt, rs);
+		}
+		
+	}
+	
+	// 2. 데이터 입력 메서드
 	public void insert(String name, int score) {
-		String sql = "insert into Play (name, score) values(?,?)";
+		String sql = "insert into play (name, score) values(?,?)";
 		
 		try {
 			//Statement 객체 생성
+			conn = DriverManager.getConnection(url, user, password);
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, name);
 			pstmt.setInt(2, score);
 			
 			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("SQL 연동 에러");
-			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("SQL연동 실패");
 		} finally {
-			try {
-				if(pstmt != null) pstmt.close();
-			} catch (Exception e2) {}
+			JdbcUtil.close(conn, pstmt, rs);
 		}
 		
 	}
 	
-	// 2. 데이터 조회 메서드
+	// 3. 데이터 조회 메서드
 	public ArrayList<PlayVO> playerList() {
 		ArrayList<PlayVO> list = new ArrayList<>();
 		String sql = "select * from play";
 		
 		try {
+			conn = DriverManager.getConnection(url, user, password);
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery(sql);
 			while(rs.next()) {
@@ -76,26 +102,53 @@ public class DBConnect {
 				
 				list.add(vo);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("SQL연동 실패");
-			System.out.println(e.getMessage());
 		} finally {
-			try {
-				if(pstmt != null) pstmt.close();
-				if(rs != null) rs.close();
-			} catch (Exception e2) {}
+			JdbcUtil.close(conn, pstmt, rs);
 		}
 		
 		return list;
 	}
 	
-	// 3. 랭킹 출력 메서드
+	// 4. 중복 확인 메서드
+	
+	public int nameConfirm(String name) {
+		int result = 0;
+		
+		String sql = "select * from play where name = ?";
+		
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = 1;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(conn, pstmt, rs);
+		}
+		
+		
+		return result;
+	}
+	
+	// 5. 랭킹 출력 메서드
 	public PlayVO allPlay() {
 		PlayVO vo = null;
 		String sql = "select id, name, score, rank() over (order by score asc) as ranking from play";
 		try {
+			conn = DriverManager.getConnection(url, user, password);
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery(sql);
+			
 			while(rs.next()) {
 				int id = rs.getInt("id");
 				String name = rs.getString("name");
@@ -103,40 +156,37 @@ public class DBConnect {
 				int rank = rs.getInt("ranking");
 				
 				vo = new PlayVO(id, name, score, rank);
+				
 				System.out.println(vo);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("SQL연동 실패");
-			System.out.println(e.getMessage());
 		} finally {
-			try {
-				if(pstmt != null) pstmt.close();
-				if(rs != null) rs.close();
-			} catch (Exception e2) {}
+			JdbcUtil.close(conn, pstmt, rs);
 		}
 		
 		
 		return vo;
 	}
 	
-	// 4. 정보 수정 메서드 
+	// 6. 정보 수정 메서드 
 	public void updatePlay(int score, String name) {
 		
 		String sql = "update Play set score =? where name =?";
 		
 		try {
+			conn = DriverManager.getConnection(url, user, password);
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, score);
 			pstmt.setString(2, name);
 			
 			pstmt.executeUpdate();
-		} catch (SQLException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("SQL연동 실패");
-			System.out.println(e.getMessage());
 		} finally {
-			try {
-				if(pstmt != null) pstmt.close();
-			} catch (Exception e2) {}
+			JdbcUtil.close(conn, pstmt, rs);
 		}
 	}
 	
