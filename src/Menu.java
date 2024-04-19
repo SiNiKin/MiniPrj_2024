@@ -8,7 +8,6 @@ public class Menu {
    public static void main(String[] args) {
 	DBConnect dao = new DBConnect();
 	Event e = new Event(sc);
-	dao.createTable();
 	
       while(true) {
          // 고객 메뉴 ui
