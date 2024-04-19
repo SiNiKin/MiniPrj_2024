@@ -27,7 +27,6 @@ public class DBConnect {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			//Connection 객체 생성
 			conn = DriverManager.getConnection(url, user, password);
-			System.out.println("Connection 객체 생성!!");
 		} catch (ClassNotFoundException ce) {
 			System.out.println("드라이버 로드 실패");
 			System.out.println(ce.getMessage());
