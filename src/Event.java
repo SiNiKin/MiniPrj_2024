@@ -9,7 +9,6 @@ public class Event {
    Scanner scan;
    DBConnect dao ;
    PlayVO vo ;
-   int result;
    
    public Event(Scanner sc) {
       this.scan = sc;
@@ -22,11 +21,10 @@ public class Event {
       String playerName = scan.next();
       scan.nextLine();
 
-      result = dao.nameConfirm(playerName);
       List<Integer> comList = randomList();
+      System.out.println(comList);
       int save = playGame(comList);
       gameResult(playerName, save);
-
    }
 
    // 랜덤한 3자리 수 생성
@@ -85,6 +83,7 @@ public class Event {
          // 게임 결과 출력
          if (strikes == 3) {
             System.out.println("3Strike 입니다!! " + save + "번 만에 맞추셨습니다.");
+  
             break;
          } else {
             System.out.println(strikes + "S " + balls + "B " + outs + "O");
@@ -94,13 +93,8 @@ public class Event {
       return save;
    }
 
-   // 기존 플레이어일 경우 점수 업데이트
+   //결과출력
    private void gameResult(String playerName, int save) {
-      if (result == 1) {
-         dao.updatePlay(save, playerName);
-         System.out.println("점수가 업데이트 되었습니다.");
-      } else {
-         dao.insert(playerName, save);
-      }
+	   dao.insert(playerName, save);
    }
 }
